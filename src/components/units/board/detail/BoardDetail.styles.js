@@ -49,7 +49,7 @@ export const CreatedAt = styled.div``;
 
 export const Body = styled.div`
   width: 100%;
-  min-height: 800px;
+  min-height: 400px;
 `;
 
 export const Title = styled.h1`

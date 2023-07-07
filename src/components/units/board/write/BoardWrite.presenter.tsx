@@ -11,7 +11,7 @@ export default function BoardWriteUI(props) {
 			<S.WriterWrapper>
 				<S.InputWrapper>
 					<S.Label>작성자</S.Label>
-					<S.Writer type='text' placeholder='이름을 적어주세요.' onChange={onChangeWriter} defaultValue={data?.fetchBoard.writer} disabled={isEdit} />
+					<S.Writer type='text' placeholder='이름을 적어주세요.' onChange={onChangeWriter} defaultValue={data?.fetchBoard.writer} disabled={data?.fetchBoard.writer} />
 					<S.Error>{writerError}</S.Error>
 				</S.InputWrapper>
 				<S.InputWrapper>

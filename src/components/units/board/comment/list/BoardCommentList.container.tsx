@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client';
-import BoardCommentUI from './BoardComment.presenter';
-import { FETCH_BOARD_COMMENTS, CREATE_BOARD_COMMENT, UPDATE_BOARD_COMMENT } from './BoardComment.queries';
+import BoardCommentUI from './BoardCommentList.presenter';
+import { FETCH_BOARD_COMMENTS, CREATE_BOARD_COMMENT, UPDATE_BOARD_COMMENT } from './BoardCommentList.queries';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -20,7 +20,6 @@ export default function BoardComment() {
 
 	const { data } = useQuery(FETCH_BOARD_COMMENTS, {
 		variables: {
-			page: 1,
 			boardId: router.query.boardId,
 		},
 	});
@@ -75,14 +74,27 @@ export default function BoardComment() {
 						password: commentPassword,
 						boardId: router.query.boardId,
 					},
-					refetchQueries: [{ query: FETCH_BOARD_COMMENTS }],
+					refetchQueries: [
+						{
+							query: FETCH_BOARD_COMMENTS,
+							variables: { boardId: router.query.boardId },
+						},
+					],
 				});
-
 			} catch (error) {
 				alert(error.message);
 			}
 		}
 	};
 
-	return <BoardCommentUI data={data} onChangeCommentContents={onChangeCommentContents} onChangeCommentPassword={onChangeCommentPassword} onChangeCommentWriter={onChangeCommentWriter} onClickSubmitComment={onClickSubmitComment} onChangeCommentRating={onChangeCommentRating} />;
+	return (
+		<BoardCommentUI
+			data={data}
+			onChangeCommentContents={onChangeCommentContents}
+			onChangeCommentPassword={onChangeCommentPassword}
+			onChangeCommentWriter={onChangeCommentWriter}
+			onClickSubmitComment={onClickSubmitComment}
+			onChangeCommentRating={onChangeCommentRating}
+		/>
+	);
 }

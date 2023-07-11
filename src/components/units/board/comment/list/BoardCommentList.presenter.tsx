@@ -1,4 +1,4 @@
-import * as S from './BoardComment.styles';
+import * as S from './BoardCommentList.styles';
 import { getDate } from '../../../../commons/libraries/utils';
 
 export default function BoardCommentUI(props) {

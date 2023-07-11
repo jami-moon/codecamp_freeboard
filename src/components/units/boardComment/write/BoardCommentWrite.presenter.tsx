@@ -1,9 +1,7 @@
 import * as S from './BoardCommentWrite.styles';
+import { IBoardCommentWriteUIProps } from './BoardCommentWrite.types';
 
-export default function BoardCommentUI(props) {
-	const { onChangeCommentContents, onChangeCommentPassword, onChangeCommentWriter, onChangeCommentRating, onClickSubmitComment } = props;
-	const { data } = props;
-
+export default function BoardCommentWriteUI(props: IBoardCommentWriteUIProps) {
 	return (
 		<S.Wrapper>
 			<>
@@ -12,7 +10,11 @@ export default function BoardCommentUI(props) {
 			</>
 			<S.InputWrapper>
 				<S.Input placeholder='작성자' onChange={props.onChangeWriter} />
-				<S.Input type='password' placeholder='비밀번호' onChange={props.onChangePassword} />
+				<S.Input
+					type='password'
+					placeholder='비밀번호'
+					onChange={props.onChangePassword}
+				/>
 			</S.InputWrapper>
 			<S.ContentsWrapper>
 				<S.Contents

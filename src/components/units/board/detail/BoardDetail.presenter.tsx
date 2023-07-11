@@ -1,6 +1,7 @@
 import * as S from './BoardDetail.styles';
+import { IBoardDetailUIProps } from './BoardDetail.types';
 
-export default function BoardDetailUI(props) {
+export default function BoardDetailUI(props: IBoardDetailUIProps) {
 	const { data, onClickMoveToEdit, onClickMoveToList } = props;
 
 	return (

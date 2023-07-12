@@ -1,25 +1,41 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { MouseEvent } from "react";
-import { IMutation, IMutationDeleteBoardCommentArgs, IQuery, IQueryFetchBoardCommentsArgs } from "../../../../commons/types/generated/types";
+import type { MouseEvent } from "react";
+import type {
+  IMutation,
+  IMutationDeleteBoardCommentArgs,
+  IQuery,
+  IQueryFetchBoardCommentsArgs,
+} from "../../../../commons/types/generated/types";
 import BoardCommentListUI from "./BoardCommentList.presenter";
-import { DELETE_BOARD_COMMENT, FETCH_BOARD_COMMENTS } from "./BoardCommentList.queries";
+import {
+  DELETE_BOARD_COMMENT,
+  FETCH_BOARD_COMMENTS,
+} from "./BoardCommentList.queries";
 
-export default function BoardCommentList() {
+export default function BoardCommentList(): JSX.Element {
   const router = useRouter();
-  if(!router || typeof router.query.boardId !== "string") return <></>
+  if (typeof router.query.boardId !== "string") return <></>;
 
-  const [deleteBoardComment] = useMutation<Pick<IMutation, "deleteBoardComment">, IMutationDeleteBoardCommentArgs>(DELETE_BOARD_COMMENT)
+  const [deleteBoardComment] = useMutation<
+    Pick<IMutation, "deleteBoardComment">,
+    IMutationDeleteBoardCommentArgs
+  >(DELETE_BOARD_COMMENT);
 
-  const { data } = useQuery<Pick<IQuery, "fetchBoardComments">, IQueryFetchBoardCommentsArgs>(FETCH_BOARD_COMMENTS, { 
-    variables: { boardId: router.query.boardId }
+  const { data } = useQuery<
+    Pick<IQuery, "fetchBoardComments">,
+    IQueryFetchBoardCommentsArgs
+  >(FETCH_BOARD_COMMENTS, {
+    variables: { boardId: router.query.boardId },
   });
 
-  const onClickDelete = async (event: MouseEvent<HTMLImageElement>) => {
-    const password = prompt("비밀번호를 입력하세요.")
+  const onClickDelete = async (
+    event: MouseEvent<HTMLImageElement>,
+  ): Promise<void> => {
+    const password = prompt("비밀번호를 입력하세요.");
     try {
-      if(!(event.target instanceof HTMLImageElement)) {
-        alert("시스템에 문제가 있습니다.")
+      if (!(event.target instanceof HTMLImageElement)) {
+        alert("시스템에 문제가 있습니다.");
         return;
       }
 
@@ -36,7 +52,7 @@ export default function BoardCommentList() {
         ],
       });
     } catch (error) {
-      if(error instanceof Error) alert(error.message)
+      if (error instanceof Error) alert(error.message);
     }
   };
 

@@ -10,4 +10,3 @@ export const FETCH_BOARDS = gql`
     }
   }
 `;
-

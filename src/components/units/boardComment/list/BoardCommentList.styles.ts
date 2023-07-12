@@ -53,4 +53,3 @@ export const DateString = styled.div`
   padding-top: 15px;
   padding-left: 60px;
 `;
-

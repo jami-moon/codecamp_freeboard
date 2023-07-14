@@ -11,15 +11,21 @@ import type {
   IUpdateBoardInput,
 } from "../../../../commons/types/generated/types";
 import type { IBoardWriteProps } from "./BoardWrite.types";
+import type { Address } from "react-daum-postcode";
 
 export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
+  const [addressModalIsOpen, setAddressModalIsOpen] = useState(false);
 
   const [writer, setWriter] = useState("");
   const [password, setPassword] = useState("");
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
 
   const [writerError, setWriterError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -30,6 +36,7 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
     Pick<IMutation, "createBoard">,
     IMutationCreateBoardArgs
   >(CREATE_BOARD);
+
   const [updateBoard] = useMutation<
     Pick<IMutation, "updateBoard">,
     IMutationUpdateBoardArgs
@@ -107,17 +114,41 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
     }
   };
 
+  const onChangeYoutubeUrl = (event: ChangeEvent<HTMLInputElement>): void => {
+    setYoutubeUrl(event.target.value);
+  };
+
+  const onChangeAddressDetail = (
+    event: ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setAddressDetail(event.target.value);
+  };
+
+  const onClickAddressSearch = (): void => {
+    setAddressModalIsOpen((prev) => !prev);
+  };
+
+  const onCompleteAddressSearch = (data: Address): void => {
+    setAddress(data.address);
+    setZipcode(data.zonecode);
+    setAddressModalIsOpen((prev) => !prev);
+  };
+
+  const handleAddressModalCancle = (): void => {
+    setAddressModalIsOpen((prev) => !prev);
+  };
+
   const onClickSubmit = async (): Promise<void> => {
-    if (writer !== "") {
+    if (writer === "") {
       setWriterError("작성자를 입력해주세요.");
     }
-    if (password !== "") {
+    if (password === "") {
       setPasswordError("비밀번호를 입력해주세요.");
     }
-    if (title !== "") {
+    if (title === "") {
       setTitleError("제목을 입력해주세요.");
     }
-    if (contents !== "") {
+    if (contents === "") {
       setContentsError("내용을 입력해주세요.");
     }
     if (writer !== "" && password !== "" && title !== "" && contents !== "") {
@@ -129,10 +160,17 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
               password,
               title,
               contents,
+              youtubeUrl,
+              boardAddress: {
+                zipcode,
+                address,
+                addressDetail,
+              },
             },
           },
         });
 
+        console.log(result.data?.createBoard._id);
         if (result.data?.createBoard._id === undefined) {
           alert("요청에 문제가 있습니다.");
           return;
@@ -146,12 +184,19 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
   };
 
   const onClickUpdate = async (): Promise<void> => {
-    if (title !== "" && contents !== "") {
+    if (
+      title === "" &&
+      contents === "" &&
+      youtubeUrl === "" &&
+      address === "" &&
+      addressDetail === "" &&
+      zipcode === ""
+    ) {
       alert("수정한 내용이 없습니다.");
       return;
     }
 
-    if (password !== "") {
+    if (password === "") {
       alert("비밀번호를 입력해주세요.");
       return;
     }
@@ -159,6 +204,14 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
     const updateBoardInput: IUpdateBoardInput = {};
     if (title !== "") updateBoardInput.title = title;
     if (contents !== "") updateBoardInput.contents = contents;
+    if (youtubeUrl !== "") updateBoardInput.youtubeUrl = youtubeUrl;
+    if (zipcode !== "" || address !== "" || addressDetail !== "") {
+      updateBoardInput.boardAddress = {};
+      if (zipcode !== "") updateBoardInput.boardAddress.zipcode = zipcode;
+      if (address !== "") updateBoardInput.boardAddress.address = address;
+      if (addressDetail !== "")
+        updateBoardInput.boardAddress.addressDetail = addressDetail;
+    }
 
     try {
       if (typeof router.query.boardId !== "string") {
@@ -194,11 +247,19 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
       onChangePassword={onChangePassword}
       onChangeTitle={onChangeTitle}
       onChangeContents={onChangeContents}
+      onChangeYoutubeUrl={onChangeYoutubeUrl}
+      onChangeAddressDetail={onChangeAddressDetail}
+      onClickAddressSearch={onClickAddressSearch}
+      onCompleteAddressSearch={onCompleteAddressSearch}
+      handleAddressModalCancle={handleAddressModalCancle}
       onClickSubmit={onClickSubmit}
       onClickUpdate={onClickUpdate}
       isActive={isActive}
       isEdit={props.isEdit}
       data={props.data}
+      addressModalIsOpen={addressModalIsOpen}
+      zipcode={zipcode}
+      address={address}
     />
   );
 }

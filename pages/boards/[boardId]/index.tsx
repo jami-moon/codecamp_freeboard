@@ -6,8 +6,8 @@ export default function BoardDetailPage(): JSX.Element {
   return (
     <>
       <BoardDetail />
-      <BoardCommentList />
       <BoardCommentWrite />
+      <BoardCommentList />
     </>
   );
 }

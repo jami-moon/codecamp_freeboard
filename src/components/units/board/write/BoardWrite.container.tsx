@@ -212,7 +212,6 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
       if (addressDetail !== "")
         updateBoardInput.boardAddress.addressDetail = addressDetail;
     }
-
     try {
       if (typeof router.query.boardId !== "string") {
         alert("시스템에 문제가 있습니다.");

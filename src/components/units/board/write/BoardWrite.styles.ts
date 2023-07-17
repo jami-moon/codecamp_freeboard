@@ -38,6 +38,10 @@ export const Writer = styled.input`
   height: 52px;
   padding-left: 16px;
   border: 1px solid #bdbdbd;
+
+  &:read-only {
+    color: #bdbdbd;
+  }
 `;
 
 export const Password = styled.input`

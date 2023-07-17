@@ -17,7 +17,14 @@ export default function BoardDetailUI(props: IBoardDetailUIProps): JSX.Element {
             </S.Info>
           </S.AvatarWrapper>
           <S.IconWrapper>
-            <S.LinkIcon src="/images/board/detail/link.png" />
+            <Tooltip
+              placement="topRight"
+              title={`${props.data?.fetchBoard?.youtubeUrl ?? ""}`}
+            >
+              <S.LinkIcon>
+                <img src="/images/board/detail/link.png" alt="" />
+              </S.LinkIcon>
+            </Tooltip>
             <Tooltip
               placement="topRight"
               title={`${props.data?.fetchBoard.boardAddress?.address ?? ""} ${

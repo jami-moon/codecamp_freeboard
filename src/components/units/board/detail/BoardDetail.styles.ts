@@ -123,4 +123,14 @@ export const DislikeCount = styled.div`
   color: #828282;
 `;
 
-export const LinkIcon = styled.img``;
+export const LinkIcon = styled.a`
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+`;

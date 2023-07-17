@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import type { MouseEvent } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
 import type {
   IMutation,
   IMutationDeleteBoardCommentArgs,
@@ -12,9 +12,13 @@ import {
   DELETE_BOARD_COMMENT,
   FETCH_BOARD_COMMENTS,
 } from "./BoardCommentList.queries";
+import { useState } from "react";
 
 export default function BoardCommentList(): JSX.Element {
   const router = useRouter();
+  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+
   if (typeof router.query.boardId !== "string") return <></>;
 
   const [deleteBoardComment] = useMutation<
@@ -32,13 +36,12 @@ export default function BoardCommentList(): JSX.Element {
   const onClickDelete = async (
     event: MouseEvent<HTMLImageElement>,
   ): Promise<void> => {
-    const password = prompt("비밀번호를 입력하세요.");
     try {
       if (!(event.target instanceof HTMLImageElement)) {
         alert("시스템에 문제가 있습니다.");
         return;
       }
-
+      setPasswordModalIsOpen(true);
       await deleteBoardComment({
         variables: {
           password,
@@ -56,5 +59,25 @@ export default function BoardCommentList(): JSX.Element {
     }
   };
 
-  return <BoardCommentListUI data={data} onClickDelete={onClickDelete} />;
+  const onChangeCheckPassword = (
+    event: ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setPassword(event.target.value);
+  };
+
+  const handlePasswordModalCancle = (): void => {
+    setPasswordModalIsOpen((prev) => !prev);
+  };
+
+  console.log(password);
+
+  return (
+    <BoardCommentListUI
+      data={data}
+      onClickDelete={onClickDelete}
+      passwordModalIsOpen={passwordModalIsOpen}
+      handlePasswordModalCancle={handlePasswordModalCancle}
+      onChangeCheckPassword={onChangeCheckPassword}
+    />
+  );
 }

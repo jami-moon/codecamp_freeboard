@@ -24,14 +24,17 @@ export default function BoardCommentListUI(
               <S.DeleteIcon
                 id={el._id}
                 src="/images/boardComment/list/option_delete_icon.png/"
-                onClick={props.onClickDelete}
+                onClick={props.onClickOpenDeleteModal}
               />
               {props.passwordModalIsOpen && (
                 <S.PasswordModal
                   open={true}
                   closeIcon={false}
+                  onOk={props.onClickDelete}
                   footer={[
-                    <Button key="ok">비밀번호 확인</Button>,
+                    <Button key="ok" onClick={props.onClickDelete}>
+                      비밀번호 확인
+                    </Button>,
                     <Button
                       key="cancle"
                       onClick={props.handlePasswordModalCancle}

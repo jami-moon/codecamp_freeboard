@@ -18,6 +18,7 @@ export default function BoardCommentList(): JSX.Element {
   const router = useRouter();
   const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(false);
   const [password, setPassword] = useState("");
+  const [boardCommentId, setBoardCommentId] = useState("");
 
   if (typeof router.query.boardId !== "string") return <></>;
 
@@ -33,19 +34,12 @@ export default function BoardCommentList(): JSX.Element {
     variables: { boardId: router.query.boardId },
   });
 
-  const onClickDelete = async (
-    event: MouseEvent<HTMLImageElement>,
-  ): Promise<void> => {
+  const onClickDelete = async (): Promise<void> => {
     try {
-      if (!(event.target instanceof HTMLImageElement)) {
-        alert("시스템에 문제가 있습니다.");
-        return;
-      }
-      setPasswordModalIsOpen(true);
       await deleteBoardComment({
         variables: {
           password,
-          boardCommentId: event.target.id,
+          boardCommentId,
         },
         refetchQueries: [
           {
@@ -54,9 +48,17 @@ export default function BoardCommentList(): JSX.Element {
           },
         ],
       });
+      setPasswordModalIsOpen(false);
     } catch (error) {
       if (error instanceof Error) alert(error.message);
     }
+  };
+
+  const onClickOpenDeleteModal = (
+    event: MouseEvent<HTMLImageElement>,
+  ): void => {
+    setBoardCommentId(event.currentTarget.id);
+    setPasswordModalIsOpen(true);
   };
 
   const onChangeCheckPassword = (
@@ -78,6 +80,7 @@ export default function BoardCommentList(): JSX.Element {
       passwordModalIsOpen={passwordModalIsOpen}
       handlePasswordModalCancle={handlePasswordModalCancle}
       onChangeCheckPassword={onChangeCheckPassword}
+      onClickOpenDeleteModal={onClickOpenDeleteModal}
     />
   );
 }

@@ -16,9 +16,6 @@ import { useState } from "react";
 
 export default function BoardCommentList(): JSX.Element {
   const router = useRouter();
-  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(false);
-  const [password, setPassword] = useState("");
-  const [boardCommentId, setBoardCommentId] = useState("");
 
   if (typeof router.query.boardId !== "string") return <></>;
 
@@ -33,6 +30,10 @@ export default function BoardCommentList(): JSX.Element {
   >(FETCH_BOARD_COMMENTS, {
     variables: { boardId: router.query.boardId },
   });
+
+  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [boardCommentId, setBoardCommentId] = useState("");
 
   const onClickDelete = async (): Promise<void> => {
     try {
@@ -70,8 +71,6 @@ export default function BoardCommentList(): JSX.Element {
   const handlePasswordModalCancle = (): void => {
     setPasswordModalIsOpen((prev) => !prev);
   };
-
-  console.log(password);
 
   return (
     <BoardCommentListUI

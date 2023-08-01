@@ -8,10 +8,12 @@ import Layout from "../src/components/commons/layout";
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <ApolloSetting>
-      <Global styles={globalStyles} />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <div>
+        <Global styles={globalStyles} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </div>
     </ApolloSetting>
   );
 }

@@ -52,17 +52,22 @@ export const ColumnTitle = styled.div`
 `;
 
 export const Footer = styled.div`
+  position: relative;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 60px;
   padding-top: 50px;
 `;
 
-export const PencilIcon = styled.img``;
-
-export const Button = styled.button`
+export const PostButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 50%;
   width: 171px;
   height: 52px;
+  justify-self: felx-end;
   background-color: white;
   border-radius: 15px;
   display: flex;
@@ -75,3 +80,4 @@ export const Button = styled.button`
     background-color: #f5f2fc;
   }
 `;
+export const PencilIcon = styled.img``;

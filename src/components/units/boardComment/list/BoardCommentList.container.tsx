@@ -1,85 +1,44 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import type { ChangeEvent, MouseEvent } from "react";
 import type {
-  IMutation,
-  IMutationDeleteBoardCommentArgs,
   IQuery,
   IQueryFetchBoardCommentsArgs,
 } from "../../../../commons/types/generated/types";
 import BoardCommentListUI from "./BoardCommentList.presenter";
-import {
-  DELETE_BOARD_COMMENT,
-  FETCH_BOARD_COMMENTS,
-} from "./BoardCommentList.queries";
-import { useState } from "react";
+import { FETCH_BOARD_COMMENTS } from "./BoardCommentList.queries";
 
 export default function BoardCommentList(): JSX.Element {
   const router = useRouter();
 
   if (typeof router.query.boardId !== "string") return <></>;
 
-  const [deleteBoardComment] = useMutation<
-    Pick<IMutation, "deleteBoardComment">,
-    IMutationDeleteBoardCommentArgs
-  >(DELETE_BOARD_COMMENT);
-
-  const { data } = useQuery<
+  const { data, fetchMore } = useQuery<
     Pick<IQuery, "fetchBoardComments">,
     IQueryFetchBoardCommentsArgs
   >(FETCH_BOARD_COMMENTS, {
     variables: { boardId: router.query.boardId },
   });
 
-  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(false);
-  const [password, setPassword] = useState("");
-  const [boardCommentId, setBoardCommentId] = useState("");
+  const onLoadMore = (): void => {
+    if (data === undefined) return;
 
-  const onClickDelete = async (): Promise<void> => {
-    try {
-      await deleteBoardComment({
-        variables: {
-          password,
-          boardCommentId,
-        },
-        refetchQueries: [
-          {
-            query: FETCH_BOARD_COMMENTS,
-            variables: { boardId: router.query.boardId },
-          },
-        ],
-      });
-      setPasswordModalIsOpen(false);
-    } catch (error) {
-      if (error instanceof Error) alert(error.message);
-    }
+    void fetchMore({
+      variables: { page: Math.ceil(data?.fetchBoardComments.length / 10) + 1 },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (fetchMoreResult?.fetchBoardComments === undefined)
+          return { fetchBoardComments: [...prev.fetchBoardComments] };
+
+        return {
+          fetchBoardComments: [
+            ...prev.fetchBoardComments,
+            ...fetchMoreResult.fetchBoardComments,
+          ],
+        };
+      },
+    });
   };
 
-  const onClickOpenDeleteModal = (
-    event: MouseEvent<HTMLImageElement>,
-  ): void => {
-    setBoardCommentId(event.currentTarget.id);
-    setPasswordModalIsOpen(true);
-  };
+  console.log(data?.fetchBoardComments)
 
-  const onChangeCheckPassword = (
-    event: ChangeEvent<HTMLInputElement>,
-  ): void => {
-    setPassword(event.target.value);
-  };
-
-  const handlePasswordModalCancle = (): void => {
-    setPasswordModalIsOpen((prev) => !prev);
-  };
-
-  return (
-    <BoardCommentListUI
-      data={data}
-      onClickDelete={onClickDelete}
-      passwordModalIsOpen={passwordModalIsOpen}
-      handlePasswordModalCancle={handlePasswordModalCancle}
-      onChangeCheckPassword={onChangeCheckPassword}
-      onClickOpenDeleteModal={onClickOpenDeleteModal}
-    />
-  );
+  return <BoardCommentListUI data={data} onLoadMore={onLoadMore} />;
 }

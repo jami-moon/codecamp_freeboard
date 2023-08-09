@@ -3,8 +3,6 @@ import * as S from "./BoardDetail.styles";
 import type { IBoardDetailUIProps } from "./BoardDetail.types";
 
 export default function BoardDetailUI(props: IBoardDetailUIProps): JSX.Element {
-  console.log(props.data);
-
   return (
     <S.Wrapper>
       <S.CardWrapper>

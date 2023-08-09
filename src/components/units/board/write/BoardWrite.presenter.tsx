@@ -3,7 +3,6 @@ import type { IBoardWriteUIProps } from "./BoardWrite.types";
 import { Button } from "antd";
 
 export default function BoardWriteUI(props: IBoardWriteUIProps): JSX.Element {
-  console.log(props);
   return (
     <>
       {/* 우편번호 검색 모달 */}
